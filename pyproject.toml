@@ -1,0 +1,121 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "maybe"
+version = "0.1.0"
+description = ""
+authors = ["Mathieu Letrone <mathieu.letrone@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+
+packages = [{include = "maybe"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+mockito = "^1.5.0"
+mypy = "^1.11.1"
+ruff = "^0.5.6"
+pytest-cov = "^5.0.0"
+pytest-sugar = "^1.0.0"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+required_plugins = [
+    "pytest-cov"
+]
+testpaths = [
+    "tests"
+]
+addopts = [
+    "--cov=maybe",
+    "--cov-report=term-missing",
+    "--cov-report=xml",
+]
+
+[tool.coverage.run]
+omit = [
+    "tests/*"
+]
+parallel = true
+branch = true
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+
+[tool.mypy]
+strict = true
+show_error_context = true
+show_column_numbers = true
+show_error_codes = true
+pretty = true
+files = ["maybe", "tests"]
+
+[tool.ruff]
+target-version = "py38"
+line-length = 100
+indent-width = 4
+output-format = "full"
+show-fixes = true
+
+[tool.ruff.lint]
+select = [
+    "A", # flake8-builtins
+    "B", # flake8-bugbear
+    "C4", # flake8-comprehension
+    "F", # pyflake
+    "Q", # flake8-quotes
+    "E", # pycodestyle
+    "W",
+    "D", # pydocstyle
+    "I", # isort,
+    "PL", # pylint
+    "ERA", # eradicate
+    "TRY", # tryceratops
+    "RUF", # Ruff
+]
+ignore = [
+    "A003", "D100", "D107", "PLC0105",
+    #  Formatter compatibility (https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules)
+    "E501", "E111", "E114", "E117", "D206", "D300", "Q000", "Q001", "Q002", "Q003",
+]
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "double"
+line-ending = "auto"
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "E731",
+    "PLR2004"
+]
