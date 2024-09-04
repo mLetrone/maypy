@@ -78,6 +78,8 @@ jobs:
         with:
           path: coverage
           merge-multiple: true
+      - name: list files
+        run: tree .
       - run: coverage combine coverage
       - run: coverage report
       - run: coverage html -d htmlcov
