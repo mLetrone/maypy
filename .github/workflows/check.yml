@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage.py${{ matrix.python-version }}
-          path: coverage
+          path: tests-reports/coverage
 
   coverage-combine:
     name: Combine coverages
@@ -76,14 +76,13 @@ jobs:
       - name: Download coverage files
         uses: actions/download-artifact@v4
         with:
-          pattern: coverage-py*
           path: coverage
           merge-multiple: true
       - run: coverage combine coverage
       - run: coverage report
-      - run: coverage xml -d xmlcov
-      - name: Upload coverage xml
+      - run: coverage html -d htmlcov
+      - name: Upload coverage html
         uses: actions/upload-artifact@v4
         with:
-         name: coverage-xml
-         path: xmlcov
+         name: coverage-html
+         path: htmlcov
