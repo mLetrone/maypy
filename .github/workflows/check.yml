@@ -51,13 +51,14 @@ jobs:
       - run: pip install poetry
       - run: poetry install
       - run: poetry run pytest
-        env:
-          COVERAGE_FILE: coverage/.coverage.py${{ matrix.python-version }}
+      - run: tree -a .
       - name: Upload coverage
         uses: actions/upload-artifact@v4
         with:
-          name: coverage.py${{ matrix.python-version }}
-          path: tests-reports/coverage
+          name: .coverage.py${{ matrix.python-version }}
+          path: .coverage
+          if-no-files-found: error
+          include-hidden-files: true
 
   coverage-combine:
     name: Combine coverages
@@ -79,7 +80,7 @@ jobs:
           path: coverage
           merge-multiple: true
       - name: list files
-        run: tree .
+        run: tree -a .
       - run: coverage combine coverage
       - run: coverage report
       - run: coverage html -d htmlcov
