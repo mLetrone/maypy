@@ -55,6 +55,7 @@ in this case it contains the value, and we can perform operation on it.
 
 ### Examples
 
+Checking value presence:
 ```python
 from maypy import Maybe
 
@@ -62,7 +63,7 @@ assert Maybe.empty().is_empty()
 assert Maybe.of(None).is_empty()
 assert Maybe.of("value").is_present()
 ```
-
+Using chaining operation over wrapped value:
 ```python
 from maypy import Maybe
 from typing import List, Optional
