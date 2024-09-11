@@ -4,7 +4,9 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "maypy"
-version = "0.1.0"
+# Version is dynamic from the tag of release
+# but poetry needs it
+version = "0.0.0"
 description = "Pythonic Java optional"
 authors = ["Mathieu Letrone <mathieu.letrone@gmail.com>"]
 readme = "README.md"
