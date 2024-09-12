@@ -2,7 +2,7 @@ from typing import Any, Callable, Dict
 
 import pytest
 
-from maybe import Supplier
+from maypy import Supplier
 
 
 def create() -> Dict[str, str]:

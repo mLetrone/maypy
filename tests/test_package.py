@@ -1,4 +1,4 @@
 def test_package() -> None:
-    import maybe
+    import maypy
 
-    assert maybe.__version__
+    assert maypy.__version__
