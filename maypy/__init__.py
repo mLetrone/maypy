@@ -1,4 +1,4 @@
-"""Maybe package."""
+"""Maypy package."""
 
 from importlib.metadata import version
 

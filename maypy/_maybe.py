@@ -50,6 +50,9 @@ class Maybe(ABC, Generic[VALUE]):
 
         Params:
             val: the provided value to wrap.
+
+        Returns:
+            A Maybe containing the value, if non-None value, otherwise an empty Maybe.
         """
         if val is None:
             return _EmptyMaybe[VALUE]()
@@ -59,8 +62,11 @@ class Maybe(ABC, Generic[VALUE]):
     def get(self) -> VALUE:
         """Return the value if present, else raise EmptyElementException.
 
+        Returns:
+            The non-None value contained in this Maybe.
+
         Raises:
-            EmptyElementException
+            EmptyElementException: if no value present.
         """
 
     @abstractmethod
@@ -69,6 +75,12 @@ class Maybe(ABC, Generic[VALUE]):
 
         If it matches the predicate, returns a Maybe describing the value,
         otherwise return an empty Maybe.
+
+        Args:
+            predicate: predicate function to apply to the value.
+
+        Returns:
+            A Maybe containing the value if it matched the predicate, else an empty Maybe.
         """
 
     @abstractmethod
@@ -76,7 +88,13 @@ class Maybe(ABC, Generic[VALUE]):
         """Map the wrapped value (if present).
 
         Apply the given mapping function to the value.
-        :return:
+
+        Args:
+            mapper: mapping function to apply to the value.
+
+        Returns:
+            A Maybe containing the result of applying the mapping function on the value,
+            if value is present else an empty Maybe.
         """
 
     @abstractmethod
@@ -84,18 +102,30 @@ class Maybe(ABC, Generic[VALUE]):
         """Returns the value if present, else return other.
 
         If other is a supplier, it returns the result of the invocation.
+
+        Args:
+            other: value to be return if no value present.
+                if other is a supplier function, returns the invocation instead.
+
+        Returns:
+            The value held by this Maybe if non-None value, otherwise either other or other invocation.
         """
 
     @abstractmethod
     def or_none(self) -> Optional[VALUE]:
-        """Returns the value if present, else return other.
+        """Returns the value if present, else return None.
 
-        If other is a supplier, it returns the result of the invocation.
+        Returns:
+            The value held by this `Maybe` if non-None value, otherwise None.
         """
 
     @abstractmethod
     def or_else_raise(self, exception: Exception) -> VALUE:
-        """Returns the value if present, otherwise raise the given exception."""
+        """Returns the value if present, otherwise raise the given exception.
+
+        Args:
+            exception: The exception to be raised if no value present.
+        """
 
     @abstractmethod
     def is_present(self) -> bool:
@@ -107,7 +137,11 @@ class Maybe(ABC, Generic[VALUE]):
 
     @abstractmethod
     def if_present(self, consumer: Callable[[VALUE], None]) -> None:
-        """Invoke the given consumer with the value if present, do nothing otherwise."""
+        """Invoke the given consumer with the value if present, do nothing otherwise.
+
+        Args:
+            consumer: function to be executed if value present.
+        """
 
 
 class _ValuedMaybe(Maybe[VALUE]):

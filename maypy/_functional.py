@@ -1,5 +1,15 @@
 from typing import Protocol, TypeVar, runtime_checkable
 
+"""
+Notes:
+    All of the functionals represent callables
+
+    - Predicate -> Callable[[T], bool]
+    - Mapper -> Callable[[T], V]
+    - Supplier -> Callable[[], V]
+"""
+
+
 T = TypeVar("T", contravariant=True)
 V = TypeVar("V", covariant=True)
 
@@ -8,7 +18,9 @@ V = TypeVar("V", covariant=True)
 class Predicate(Protocol[T]):
     """Protocol describing predicate function.
 
-    Its goal is to verify if a value `V` match the conditions define.
+    The corresponding signature is `Callable[[T], bool]`.
+
+    Its goal is to verify if a value `T` match the conditions define.
     (can be a named function or lambda function).
 
     Examples:
@@ -31,12 +43,14 @@ T_MAPPER = TypeVar("T_MAPPER", covariant=True)
 class Mapper(Protocol[T_MAPPER, V]):
     """Protocol describing mapper function.
 
+    The corresponding signature is `Callable[[T], V]`.
+
     Its goal is to transform a value to another.
     (can be a named function or lambda function).
 
     Examples:
         >>> lambda val: val * 15
-        >>>
+        >>> # OR
         >>> from numbers import Number
         >>> def multiply_by_ten(val: int) -> int:
         >>>     return 10 * val
@@ -49,6 +63,8 @@ class Mapper(Protocol[T_MAPPER, V]):
 @runtime_checkable
 class Supplier(Protocol[V]):
     """Protocol describing supplier function.
+
+    The corresponding signature is `Callable[[], None]`.
 
     Its goal is to supply a new `V` value at invocation.
     (can be a named function or lambda function).

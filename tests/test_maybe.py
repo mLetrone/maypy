@@ -3,7 +3,7 @@ from typing import List
 
 import pytest
 
-from maybe import Empty, EmptyMaybeException, Maybe
+from maypy import Empty, EmptyMaybeException, Maybe
 
 
 class MaybeTestException(Exception):
