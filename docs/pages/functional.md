@@ -1,0 +1,5 @@
+# Functionals 
+
+--- 
+
+::: maypy._functional
