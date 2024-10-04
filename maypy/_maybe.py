@@ -192,7 +192,7 @@ class _ValuedMaybe(Maybe[VALUE]):
             return other.get().__eq__(self.get()) if other.is_present() else False  # type: ignore[no-any-return]
         return NotImplemented
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return f"Maybe[{type(self.__value).__name__}]({self.__value})"
 
 
@@ -240,7 +240,7 @@ class _EmptyMaybe(Maybe[VALUE]):
             return False if other.is_present() else True
         return NotImplemented
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return "Maybe[empty]"
 
 
