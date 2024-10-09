@@ -59,6 +59,8 @@ nav:
       - Getting started:
           - Installation: installation.md
           - Usage: usage.md
+      - About:
+          - Changelog: changelog.md
   - API Reference:
       - Maybe Container: maybe.md
       - Functionals: functional.md
