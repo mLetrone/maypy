@@ -65,6 +65,7 @@ nav:
       - Maybe Container: maybe.md
       - Functionals: functional.md
       - Exceptions: exceptions.md
+      - Predicates: predicates.md
 
 plugins:
   - search
