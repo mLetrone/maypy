@@ -46,6 +46,7 @@ mkdocs = "^1.6.1"
 mkdocstrings = {extras = ["python"], version = "^0.26.1"}
 mkdocs-material = "^9.5.34"
 termynal = "^0.12.1"
+commitizen = "^3.29.1"
 
 [tool.poetry.group.docs]
 optional = true
@@ -55,6 +56,16 @@ mkdocs = "^1.6.1"
 mkdocstrings = {extras = ["python"], version = "^0.26.1"}
 termynal = "^0.12.1"
 mkdocs-material = "^9.5.34"
+
+[tool.commitizen]
+version_provider = "scm"
+annotated_tag = true
+changelog_incremental = true
+
+[tool.commitizen.change_type_map]
+feat = ":sparkles: Features"
+fix = ":bug: Bug fixes"
+refactor = ":recycle: Refactoring"
 
 [tool.pytest.ini_options]
 minversion = "8.0"
