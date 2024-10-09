@@ -148,9 +148,20 @@ assert Maybe.of(12).or_else_raise(CustomError()) == 12
     _By the way `mypy` will infer types even with lambda :tada:!!!_
 
 ### Filtering
+    
 
 It is possible to perform inline condition on our wrapped value with [`filter`:octicons-link-external-16:](maybe.md#maypy._maybe.Maybe.filter).
-Taking a [`Predicate`:octicons-link-external-16:](functional.md#maypy._functional.Predicate), it will check if the value matches the predicate and returning _Maybe_ itself when passing, otherwise an empty _Maybe_ is returned.
+Taking a [`Predicate`:octicons-link-external-16:](functional.md#maypy._functional.Predicate), it will check if the value matches the predicate and returning _Maybe_ itself when passing,
+otherwise an empty _Maybe_ is returned.
+
+#### Built-in Predicates
+
+!!! tag-version "[1.1.0](changelog.md)"
+
+    Some [built-in predicates] have been added.
+    
+  [built-in predicates]: ./predicates.md
+
 
 ```python
 price = 999.99
@@ -175,40 +186,40 @@ class Movie:
     oscars: list[str] | None = field(default=None)
 ```
 
-without _Maybe_:
+=== "without _Maybe_"
+    
+    ```python
+    from typing import Callable
+    
+    def interval_checker(start_year: int, end_year: int) -> Callable[[Movie], bool]:
+        def is_in_range(movie: Movie | None) -> bool:
+            if movie is not None:
+                return start_year <= movie.year <= end_year
+            return False
+    
+        return is_in_range
+    
+    
+    movie = Movie("Luc Besson", "Taxi", 1998, ["comedy"])
+    
+    assert interval_checker(1990, 2005)(movie)
+    assert not interval_checker(2000, 2020)(movie)
+    assert not interval_checker(2000, 2020)(None)
+    ```
 
-```python
-from maypy import Predicate
-
-
-def interval_checker(start_year: int, end_year: int) -> Predicate[Movie]:
-    def is_in_range(movie: Movie | None) -> bool:
-        if movie is not None:
-            return start_year <= movie.year <= end_year
-        return False
-
-    return is_in_range
-
-
-movie = Movie("Luc Besson", "Taxi", 1998, ["comedy"])
-
-assert interval_checker(1990, 2005)(movie)
-assert not interval_checker(2000, 2020)(movie)
-assert not interval_checker(2000, 2020)(None)
-```
-
-with _Maybe_:
-```python
-
-assert Maybe.of(movie).filter(lambda film: 1990 <= film.year <= 2005).is_present()
-```
+=== "with _Maybe_"
+    ```python
+    from maypy import Maybe
+    
+    assert Maybe.of(movie).filter(lambda film: 1990 <= film.year <= 2005).is_present()
+    ```
 
 ### Mapping
 
 With a similar syntax, we can transform the value inside _Maybe_ using 
 [`map`:octicons-link-external-16:](maybe.md#maypy._maybe.Maybe.map).
 
-Reusing a last example, getting the number of oscars rewarding the movie.
+Reusing last example, getting the number of oscars rewarding the movie.
 
 ```python
 movie = Movie("Luc Besson", "Taxi", 1998, ["comedy"])
@@ -225,6 +236,8 @@ It is powerful to chain _filter_ and _map_ together.
 Like checking the correctness of an input by a user.
 
 ```python
+from maypy.predicates import one_of
+
 VALID_BOOLS = ("y", "n", "yes", "no")
 
 user_input = "y "
@@ -232,7 +245,7 @@ user_input = "y "
 assert (
     Maybe.of(user_input)
     .map(lambda input_: input_.strip())
-    .filter(lambda x: x in VALID_BOOLS)
+    .filter(one_of(VALID_BOOLS))
     .is_present()
 )
 ```
