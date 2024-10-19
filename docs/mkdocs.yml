@@ -7,6 +7,11 @@ repo_name: "MLetrone/maypy"
 repo_url: "https://github.com/mLetrone/maypy"
 site_dir: site
 
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+
 docs_dir: "pages"
 theme:
   name: material
