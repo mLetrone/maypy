@@ -34,9 +34,9 @@ jobs:
           git add ./CHANGELOG.md
           git commit -m ":rocket: bump: version -> $TAG_NAME"
           git push origin HEAD:master
-      - name: update version
-        run: poetry version $TAG_NAME
-      - name: publish
-        run: poetry publish --build
-        env:
-           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+#      - name: update version
+#        run: poetry version $TAG_NAME
+#      - name: publish
+#        run: poetry publish --build
+#        env:
+#           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
