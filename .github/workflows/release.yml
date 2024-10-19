@@ -26,7 +26,7 @@ jobs:
       - name: display tag version
         run: echo "new version $TAG_NAME"
       - name: generate changelog
-        run: cz changelog
+        run: poetry run cz changelog
       - name: commit changelog
         run: |
           git config user.name github-actions[bot]
