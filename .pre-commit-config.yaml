@@ -23,3 +23,9 @@ repos:
         language: python
         types_or: [ python, pyi ]
         stages: [pre-push]
+
+      - id: tests
+        name: tests
+        entry: poetry run pytest
+        language: python
+        stages: [pre-push]
