@@ -25,15 +25,9 @@ jobs:
         run: echo "TAG_NAME=$(git describe --tags --exact-match HEAD)" >> $GITHUB_ENV
       - name: display tag version
         run: echo "new version $TAG_NAME"
-      - name: generate changelog
-        run: poetry run cz changelog
-      - name: commit changelog
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add ./CHANGELOG.md
-          git commit -m ":rocket: bump: version -> $TAG_NAME"
-          git push origin HEAD:master
+      - uses: ./.github/workflows/generate-changelog.yml
+        with:
+          tag: "$TAG_NAME"
 #      - name: update version
 #        run: poetry version $TAG_NAME
 #      - name: publish
