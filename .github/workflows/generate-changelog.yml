@@ -1,0 +1,41 @@
+name: generate-changelog
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "The tag version for which changelog should be added"
+        required: true
+        type: string
+  workflow_call:
+    tag:
+      description: "The tag version for which changelog should be added"
+      required: true
+      type: string
+
+jobs:
+  generate-changelog:
+    name: "Generate changelog"
+    runs-on: ubuntu-latest
+    permission:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+      - name: update pip
+        run: pip install --upgrade pip
+      - name: install poetry
+        run: pip install poetry
+      - name: install dependencies
+        run: poetry install --only dev
+      - name: generate changelog
+        run: poetry run cz changelog ${{ inputs.tag }}
+      - name: commit changelog
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add ./CHANGELOG.md
+          git commit -m ":rocket: bump: version -> ${{ inputs.tag }}"
+          git push origin HEAD:master
