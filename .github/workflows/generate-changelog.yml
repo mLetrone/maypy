@@ -8,16 +8,17 @@ on:
         required: true
         type: string
   workflow_call:
-    tag:
-      description: "The tag version for which changelog should be added"
-      required: true
-      type: string
+    inputs:
+      tag:
+        description: "The tag version for which changelog should be added"
+        required: true
+        type: string
 
 jobs:
   generate-changelog:
     name: "Generate changelog"
     runs-on: ubuntu-latest
-    permission:
+    permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
