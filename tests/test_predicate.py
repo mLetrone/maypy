@@ -1,16 +1,22 @@
 import re
+from datetime import datetime
 from typing import Any, ClassVar, Sized
 
 import pytest
 
 from maypy.predicates import (
+    between,
     contains,
     equals,
+    ge,
+    gt,
     is_blank_str,
     is_empty,
     is_falsy,
     is_length,
     is_truthy,
+    le,
+    lt,
     match_regex,
     neg,
     one_of,
@@ -133,3 +139,57 @@ class TestPredicate:
         assert not neg(is_empty)([])
         assert neg(is_empty)([1])
         assert not neg(lambda _x: True)("")
+
+    def test_gt(self) -> None:
+        greater_than_5 = gt(5)
+
+        assert greater_than_5(10)
+        assert not greater_than_5(2)
+        assert not greater_than_5(5)
+
+    def test_ge(self) -> None:
+        ge_5 = ge(5)
+
+        assert ge_5(10)
+        assert ge_5(5)
+        assert not ge_5(2)
+
+    def test_lt(self) -> None:
+        lt_5 = lt(5)
+
+        assert not lt_5(10)
+        assert not lt_5(5)
+        assert lt_5(2)
+
+    def test_le(self) -> None:
+        le_5 = le(5)
+
+        assert not le_5(10)
+        assert le_5(5)
+        assert le_5(2)
+
+    def test_comparison_with_date(self) -> None:
+        date = datetime(2024, 1, 1)
+        le_2024_01_01 = le(date)
+
+        assert le_2024_01_01(datetime(2023, 1, 1))
+        assert le_2024_01_01(date)
+        assert not le_2024_01_01(datetime(2024, 2, 28))
+
+    def test_between(self) -> None:
+        between_0_10 = between(0, 10)
+
+        assert between_0_10(6)
+        assert between_0_10(10)
+        assert between_0_10(0)
+        assert not between_0_10(-1.67)
+        assert not between_0_10(11)
+
+    def test_between_exclusive(self) -> None:
+        between_0_10 = between(0, 10, True)
+
+        assert between_0_10(6)
+        assert not between_0_10(10)
+        assert not between_0_10(0)
+        assert not between_0_10(-1.67)
+        assert not between_0_10(11)

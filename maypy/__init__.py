@@ -16,5 +16,5 @@ __all__ = [
     "EmptyMaybeException",
     "MaybeException",
     "Empty",
-    "predicates"
+    "predicates",
 ]
