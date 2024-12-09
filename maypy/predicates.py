@@ -1,7 +1,8 @@
+import operator
 import re
-from collections.abc import Container, Sized
+from collections.abc import Callable, Container, Sized
 from re import Pattern
-from typing import TypeVar, Union, overload
+from typing import Any, Protocol, TypeVar, Union, overload
 
 from maypy import Predicate
 
@@ -68,6 +69,7 @@ def is_length(expected_len: int) -> Predicate[Sized]:
         >>> assert not is_length_at_5({5})
     """
     return _IsLength(expected_len)
+
 
 def is_empty(val: Sized) -> bool:
     """Checks if the element is empty."""
@@ -147,7 +149,6 @@ class _Contains(Predicate[Container[T]]):
         self.items = items
 
     def __call__(self, val: Container[T]) -> bool:
-        """TODO."""
         return all(item in val for item in self.items)
 
     def __repr__(self) -> str:
@@ -236,3 +237,76 @@ def match_regex(
         return _MatchRegex(regex)
 
     return _MatchRegex(re.compile(regex, flags))
+
+
+class Comparison(Protocol):
+    def __le__(self, other: Any) -> bool: ...
+    def __lt__(self, other: Any) -> bool: ...
+    def __ge__(self, other: Any) -> bool: ...
+    def __gt__(self, other: Any) -> bool: ...
+
+
+class _Comparator(Predicate[Comparison]):
+    def __init__(
+        self,
+        bound: Comparison,
+        comp_operator: Callable[[Comparison, Comparison], bool],
+        operator: str,
+    ) -> None:
+        self.comp_operator = comp_operator
+        self.bound = bound
+        self.operator = operator
+
+    def __call__(self, val: Comparison) -> bool:
+        return self.comp_operator(val, self.bound)
+
+    def __repr__(self) -> str:
+        return f"<comparison predicate x {self.operator} {self.bound}>"
+
+
+def gt(bound: Comparison) -> Predicate[Comparison]:
+    """Returns a predicate corresponding to x > bound."""
+    return _Comparator(bound, operator.gt, ">")
+
+
+def ge(bound: Comparison) -> Predicate[Comparison]:
+    """Returns a predicate corresponding to x >= bound."""
+    return _Comparator(bound, operator.ge, ">=")
+
+
+def lt(bound: Comparison) -> Predicate[Comparison]:
+    """Returns a predicate corresponding to x < bound."""
+    return _Comparator(bound, operator.lt, "<")
+
+
+def le(bound: Comparison) -> Predicate[Comparison]:
+    """Returns a predicate corresponding to x <= bound."""
+    return _Comparator(bound, operator.le, "<=")
+
+
+class _Between(Predicate[Comparison]):
+    def __init__(self, inf_bound: Comparison, sup_bound: Comparison, exclude_bound: bool) -> None:
+        self.inf_bound = inf_bound
+        self.sup_bound = sup_bound
+        self.exclude_bound = exclude_bound
+
+    def __call__(self, val: Comparison) -> bool:
+        if self.exclude_bound:
+            return self.inf_bound < val < self.sup_bound
+
+        return self.inf_bound <= val <= self.sup_bound
+
+    def __repr__(self) -> str:
+        op = "<" if self.exclude_bound else "<="
+        return f"<between predicate {self.inf_bound} {op} x {op} {self.sup_bound}>"
+
+
+def between(
+    inf_bound: Comparison, sup_bound: Comparison, exclude: bool = False
+) -> Predicate[Comparison]:
+    """Returns a between predicate.
+
+    Corresponding to inf_bound < x < sup_bound if exclude,
+    otherwise inf_bound <= x <= sup_bound.
+    """
+    return _Between(inf_bound, sup_bound, exclude)
