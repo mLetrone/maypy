@@ -101,6 +101,7 @@ omit = [
 ]
 exclude_also = [
     "def __repr__",
+    "def .+: \\.\\.\\.",
     "@overload",
 ]
 [tool.coverage.html]
