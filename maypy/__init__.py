@@ -1,8 +1,12 @@
 """Maypy package."""
 
-from importlib.metadata import version
+from importlib.metadata import PackageNotFoundError, version
 
-__version__ = version(__name__)
+try:
+    __version__ = version(__name__)
+except PackageNotFoundError:  # pragma: no cover
+    # metadata are missing
+    __version__ = "undefined"
 
 from ._exceptions import EmptyMaybeException, MaybeException
 from ._functional import Mapper, Predicate, Supplier
@@ -16,5 +20,5 @@ __all__ = [
     "EmptyMaybeException",
     "MaybeException",
     "Empty",
-    "predicates"
+    "predicates",
 ]
