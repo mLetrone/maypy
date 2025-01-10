@@ -101,6 +101,7 @@ omit = [
 ]
 exclude_also = [
     "def __repr__",
+    "@overload",
 ]
 [tool.coverage.html]
 directory = "tests-reports/coverage"
