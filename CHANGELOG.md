@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 ## Maypy
 
+## 1.1.3 (2025-01-10)
+
+### :bug: Bug fixes
+
+- handle missing metadata package
+
 ## 1.1.2 (2024-10-19)
 
 ### :bug: Bug fixes
