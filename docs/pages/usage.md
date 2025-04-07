@@ -13,20 +13,20 @@ A Maybe object become empty when the value it should contain is `None`.
 There are 3 ways to have a empty _Maybe_.
 
 ```py
-from maypy import Empty, Maybe
+from maypy import EMPTY, Empty, maybe
 
-assert Maybe.of(None) == Maybe.empty() == Empty
+assert maybe(None) == Empty() == EMPTY
 ```
 !!! note
-    `Maybe.of(None)` is here as an example, for readability use the others to instantiate an empty Maybe.
+    `maybe(None)` is here as an example, for readability use the others to instantiate an empty Maybe.
 
 
 ### Valuated
 
-Valuated _Maybe_ is quite straightforward, provide some value whatever it is, as long as is not `None` to [`of`:octicons-link-external-16:](maybe.md#maypy._maybe.Maybe.of) .
+Valuated _Maybe_ or `Some`, is quite straightforward, provide some value whatever it is, as long as is not `None` to [`of`:octicons-link-external-16:](maybe.md#maypy._maybe.Some) .
 
 ```python
-assert Maybe.of(12)
+assert maybe(12)
 ```
 
 ## Checking value presence
@@ -40,26 +40,26 @@ Another approach is to examine the "truthiness" of _Maybe_.
 
 === "is_present"
     ```python
-    name = Maybe.of("name")
+    name = maybe("name")
     assert name.is_present()
     
-    name = Maybe.empty()
+    name = Empty()
     assert not name.is_present()
     ```
 
 === "is_empty"
     ```python 
-    name = Maybe.of("name")
+    name = maybe("name")
     assert not name.is_empty()
     
-    name = Maybe.empty()
+    name = Empty()
     assert name.is_empty()
     ```
 === "truthiness"
     ```python
-    assert Maybe.of("name")
+    assert maybe("name")
 
-    assert not Maybe.empty()
+    assert not Empty()
     ```
 ## Get wrapped value
 
@@ -67,8 +67,8 @@ To retrieve the value contained inside a _Maybe_, the method [`get`:octicons-lin
 returns it or raises an [`EmptyMaybeException`:octicons-link-external-16:](exceptions.md#maypy._exceptions.EmptyMaybeException).
 
 ```python
-assert Maybe.of("Mathieu").get() == "Mathieu"
-assert Maybe.empty().get()
+assert maybe("Mathieu").get() == "Mathieu"
+assert Empty().get()
 >>> EmptyMaybeException
 ```
 
@@ -83,7 +83,7 @@ Taking either a value or a [`Supplier`:octicons-link-external-16:](functional.md
     ```python
     assert Maybe.empty().or_else(12) == 12
     
-    assert Maybe.of("present").or_else("absent") == "present"
+    assert maybe("present").or_else("absent") == "present"
     ```
 
     !!! warning
@@ -106,7 +106,7 @@ Taking either a value or a [`Supplier`:octicons-link-external-16:](functional.md
     ```python
     assert Maybe.empty().or_else(lambda: 12) == 12
     
-    assert Maybe.of("present").or_else(lambda: "absent") == "present"
+    assert maybe("present").or_else(lambda: "absent") == "present"
     ```
 
     !!! tips
@@ -120,8 +120,8 @@ Taking either a value or a [`Supplier`:octicons-link-external-16:](functional.md
         
         assert Maybe.empty().or_else(populate_data) == ["python", "c++", "c", "java"]
         >>> "invocation of populate_data"
-        assert Maybe.of(["ruby", "kotlin"]).or_else(populate_data) == ["ruby", "kotlin"]
-        assert Maybe.of(["ruby", "kotlin"]).or_else(populate_data()) == ["ruby", "kotlin"]
+        assert maybe(["ruby", "kotlin"]).or_else(populate_data) == ["ruby", "kotlin"]
+        assert maybe(["ruby", "kotlin"]).or_else(populate_data()) == ["ruby", "kotlin"]
         >>> "invocation of populate_data"
         ```
 
@@ -136,7 +136,7 @@ class CustomError(Exception):
 
 assert Maybe.empty().or_else_raise(CustomError())
 >>> CustomError
-assert Maybe.of(12).or_else_raise(CustomError()) == 12
+assert maybe(12).or_else_raise(CustomError()) == 12
 ```
 
 ## Manipulating the value
@@ -166,8 +166,8 @@ otherwise an empty _Maybe_ is returned.
 ```python
 price = 999.99
 
-assert Maybe.of(price).filter(lambda x: x <= 1000).is_present()
-assert Maybe.of(price).filter(lambda x: x >= 1000).is_empty()
+assert maybe(price).filter(lambda x: x <= 1000).is_present()
+assert maybe(price).filter(lambda x: x >= 1000).is_empty()
 ```
 
 You may wonder why using it and what is the gain. Let's dive on a more concrete example!
@@ -211,7 +211,7 @@ class Movie:
     ```python
     from maypy import Maybe
     
-    assert Maybe.of(movie).filter(lambda film: 1990 <= film.year <= 2005).is_present()
+    assert maybe(movie).filter(lambda film: 1990 <= film.year <= 2005).is_present()
     ```
 
 ### Mapping
@@ -225,7 +225,7 @@ Reusing last example, getting the number of oscars rewarding the movie.
 movie = Movie("Luc Besson", "Taxi", 1998, ["comedy"])
 
 assert (
-        Maybe.of(movie)
+        maybe(movie)
         .map(lambda film: movie.oscars)
         .map(lambda oscars: len(oscars))
         .or_else(0) == 0
@@ -243,7 +243,7 @@ VALID_BOOLS = ("y", "n", "yes", "no")
 user_input = "y "
 
 assert (
-    Maybe.of(user_input)
+    maybe(user_input)
     .map(lambda input_: input_.strip())
     .filter(one_of(VALID_BOOLS))
     .is_present()
@@ -257,7 +257,7 @@ it allows to perform some code, using a `Consumer` function (`Callable[[VALUE], 
 on the wrapped value if present, otherwise nothing will happen.
 
 ```python
-Maybe.of("name").if_present(lambda val: print(val))
+maybe("name").if_present(lambda val: print(val))
 ```
 
 !!! warning

@@ -10,15 +10,18 @@ except PackageNotFoundError:  # pragma: no cover
 
 from ._exceptions import EmptyMaybeException, MaybeException
 from ._functional import Mapper, Predicate, Supplier
-from ._maybe import Empty, Maybe
+from ._maybe import EMPTY, Empty, Maybe, Some, maybe
 
 __all__ = [
     "Maybe",
+    "maybe",
+    "Some",
+    "Empty",
     "Mapper",
     "Supplier",
     "Predicate",
     "EmptyMaybeException",
     "MaybeException",
-    "Empty",
+    "EMPTY",
     "predicates",
 ]

@@ -19,6 +19,11 @@ __all__ = [
     "one_of",
     "neg",
     "match_regex",
+    "between",
+    "ge",
+    "gt",
+    "le",
+    "lt",
 ]
 
 """
@@ -47,7 +52,7 @@ def is_truthy(val: T) -> bool:
     return bool(val)
 
 
-class _IsLength(Predicate[Sized]):
+class _IsLength:
     """Predicate to check if the length of value is equal to the expected length."""
 
     def __init__(self, expected_len: int) -> None:
@@ -90,12 +95,12 @@ def is_blank_str(val: str) -> bool:
     return is_empty(val.strip())
 
 
-class _Neg(Predicate[T]):
+class _Neg:
     def __init__(self, predicate: Predicate[T]) -> None:
         self.predicate = predicate
 
     def __call__(self, val: T) -> bool:
-        return not self.predicate(val)
+        return not self.predicate(val)  # type: ignore[arg-type]
 
     def __repr__(self) -> str:
         return f"<neg predicate of {self.predicate}>"
@@ -107,8 +112,8 @@ def neg(predicate: Predicate[T]) -> Predicate[T]:
     If the predicate would yield True, the negated one would yield False, and vice versa.
 
     Examples:
-        >>> assert Maybe.of("maypy").filter(is_blank_str).is_empty()
-        >>> assert Maybe.of("maypy").filter(neg(is_blank_str)).is_present()
+        >>> assert maybe("maypy").filter(is_blank_str).is_empty()
+        >>> assert maybe("maypy").filter(neg(is_blank_str)).is_present()
 
     Args:
         predicate: preddicate to negate
@@ -119,7 +124,7 @@ def neg(predicate: Predicate[T]) -> Predicate[T]:
     return _Neg(predicate)
 
 
-class _Equals(Predicate[T]):
+class _Equals:
     def __init__(self, expected: T) -> None:
         self.expected = expected
 
@@ -144,7 +149,7 @@ def equals(expected: T) -> Predicate[T]:
     return _Equals(expected)
 
 
-class _Contains(Predicate[Container[T]]):
+class _Contains:
     def __init__(self, *items: T) -> None:
         self.items = items
 
@@ -173,7 +178,7 @@ def contains(*items: T) -> Predicate[Container[T]]:
     return _Contains(*items)
 
 
-class _OneOf(Predicate[T]):
+class _OneOf:
     def __init__(self, options: Container[T]) -> None:
         self.options = options
 
@@ -196,7 +201,7 @@ def one_of(options: Container[T]) -> Predicate[T]:
     return _OneOf(options)
 
 
-class _MatchRegex(Predicate[str]):
+class _MatchRegex:
     def __init__(self, pattern: re.Pattern[str]) -> None:
         self.pattern = pattern
 
@@ -246,7 +251,7 @@ class Comparison(Protocol):
     def __gt__(self, other: Any) -> bool: ...
 
 
-class _Comparator(Predicate[Comparison]):
+class _Comparator:
     def __init__(
         self,
         bound: Comparison,
@@ -284,7 +289,7 @@ def le(bound: Comparison) -> Predicate[Comparison]:
     return _Comparator(bound, operator.le, "<=")
 
 
-class _Between(Predicate[Comparison]):
+class _Between:
     def __init__(self, inf_bound: Comparison, sup_bound: Comparison, exclude_bound: bool) -> None:
         self.inf_bound = inf_bound
         self.sup_bound = sup_bound
