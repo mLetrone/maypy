@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Generic, Optional, TypeVar, Union
 
+from typing_extensions import deprecated
+
 from ._exceptions import EmptyMaybeException
 from ._functional import Mapper, Predicate, Supplier
 
@@ -38,11 +40,13 @@ class Maybe(ABC, Generic[VALUE]):
     """
 
     @staticmethod
+    @deprecated("'Maybe.empty' is deprecated, prefer use 'Empty()' instead.")
     def empty() -> "Maybe[Any]":
         """Returns a empty `Maybe` instance."""
-        return _EmptyMaybe[Any]()
+        return Empty[Any]()
 
     @staticmethod
+    @deprecated("'Maybe.of' is deprecated, prefer use 'maybe' instead.")
     def of(val: Optional[VALUE]) -> "Maybe[VALUE]":
         """Returns a `Maybe` instance depends on the value provided.
 
@@ -55,8 +59,8 @@ class Maybe(ABC, Generic[VALUE]):
             A Maybe containing the value, if non-None value, otherwise an empty Maybe.
         """
         if val is None:
-            return _EmptyMaybe[VALUE]()
-        return _ValuedMaybe[VALUE](val)
+            return Empty[VALUE]()
+        return Some[VALUE](val)
 
     @abstractmethod
     def get(self) -> VALUE:
@@ -144,12 +148,8 @@ class Maybe(ABC, Generic[VALUE]):
         """
 
 
-class _ValuedMaybe(Maybe[VALUE]):
-    """Private class defining the behavior of a valuated Maybe.
-
-    Warnings:
-        It should not be used outside of this file.
-    """
+class Some(Maybe[VALUE]):
+    """Valuated Maybe."""
 
     def __init__(self, value: VALUE) -> None:
         self.__value = value
@@ -161,7 +161,7 @@ class _ValuedMaybe(Maybe[VALUE]):
         if predicate(self.__value):
             return self
 
-        return Maybe.empty()
+        return Empty[VALUE]()
 
     def map(self, mapper: Mapper[VALUE, OUTPUT]) -> "Maybe[OUTPUT]":
         return Maybe.of(mapper(self.__value))
@@ -196,11 +196,10 @@ class _ValuedMaybe(Maybe[VALUE]):
         return f"Maybe[{type(self.__value).__name__}]({self.__value})"
 
 
-class _EmptyMaybe(Maybe[VALUE]):
-    """Private class defining the behavior of a empty Maybe.
+class Empty(Maybe[VALUE]):
+    """Empty Maybe.
 
-    Warnings:
-        It should not be used outside of this file.
+    It doesn't wrap any value.
     """
 
     def get(self) -> VALUE:
@@ -210,10 +209,10 @@ class _EmptyMaybe(Maybe[VALUE]):
         return self
 
     def map(self, mapper: Mapper[VALUE, OUTPUT]) -> "Maybe[OUTPUT]":
-        return _EmptyMaybe[OUTPUT]()
+        return Empty[OUTPUT]()
 
     def or_else(self, other: Union[VALUE, Supplier[VALUE]]) -> VALUE:
-        if isinstance(other, Supplier):
+        if callable(other):
             return other()
         return other
 
@@ -244,4 +243,20 @@ class _EmptyMaybe(Maybe[VALUE]):
         return "Maybe[empty]"
 
 
-Empty = Maybe.empty()
+EMPTY = Empty[Any]()
+
+
+def maybe(val: Optional[VALUE]) -> Maybe[VALUE]:
+    """Returns a `Maybe` instance depends on the value provided.
+
+    If it's a none value, an empty `Maybe` will be returned.
+
+    Params:
+        val: the provided value to wrap.
+
+    Returns:
+        A Maybe containing the value, if non-None value, otherwise an empty Maybe.
+    """
+    if val is None:
+        return Empty[VALUE]()
+    return Some[VALUE](val)

@@ -56,12 +56,13 @@ in this case it contains the value, and we can perform operation on it.
 ### Examples
 
 Checking value presence:
-```python
-from maypy import Maybe
 
-assert Maybe.empty().is_empty()
-assert Maybe.of(None).is_empty()
-assert Maybe.of("value").is_present()
+```python
+from maypy import Maybe, Empty, maybe
+
+assert Empty().is_empty()
+assert maybe(None).is_empty()
+assert maybe("value").is_present()
 ```
 Using chaining operation over wrapped value:
 ```python
@@ -85,7 +86,7 @@ Defining return from database result:
 from dataclasses import dataclass
 from enum import StrEnum, unique
 
-from maypy import Maybe
+from maypy import Maybe, maybe
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -114,7 +115,7 @@ class UserEntity(BaseModel):
 
 
 def get_user(db: Session, user_id: str) -> Maybe[User]:
-  return Maybe.of(db.query(UserEntity).filter(UserEntity.id == user_id).first()).map(to_domain)
+  return maybe(db.query(UserEntity).filter(UserEntity.id == user_id).first()).map(to_domain)
 
 
 def to_domain(user_dto: UserEntity) -> User:
