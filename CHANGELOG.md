@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 ## Maypy
 
+## 2.0.0 (2025-04-07)
+
+### :sparkles: Features
+
+- pattern matching
+- **type**: use callable instead of protocols
+- **predicate**: add comparisons
+
 ## 1.1.3 (2025-01-10)
 
 ### :bug: Bug fixes
