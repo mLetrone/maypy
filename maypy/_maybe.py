@@ -151,6 +151,8 @@ class Maybe(ABC, Generic[VALUE]):
 class Some(Maybe[VALUE]):
     """Valuated Maybe."""
 
+    __match_args__ = ("__value",)
+
     def __init__(self, value: VALUE) -> None:
         self.__value = value
 
