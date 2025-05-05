@@ -154,6 +154,8 @@ class Some(Maybe[VALUE]):
     __match_args__ = ("__value",)
 
     def __init__(self, value: VALUE) -> None:
+        if value is None:
+            raise MaybeException("Some Should be instantiated with non None value only.")
         self.__value = value
 
     def get(self) -> VALUE:
