@@ -3,6 +3,7 @@ from typing import Any, Callable, Generic, Optional, TypeVar, Union
 
 from typing_extensions import deprecated
 
+from . import MaybeException
 from ._exceptions import EmptyMaybeException
 from ._functional import Mapper, Predicate, Supplier
 
@@ -88,7 +89,7 @@ class Maybe(ABC, Generic[VALUE]):
         """
 
     @abstractmethod
-    def map(self, mapper: Mapper[VALUE, OUTPUT]) -> "Maybe[OUTPUT]":
+    def map(self, mapper: Mapper[VALUE, Optional[OUTPUT]]) -> "Maybe[OUTPUT]":
         """Map the wrapped value (if present).
 
         Apply the given mapping function to the value.
@@ -167,8 +168,8 @@ class Some(Maybe[VALUE]):
 
         return Empty[VALUE]()
 
-    def map(self, mapper: Mapper[VALUE, OUTPUT]) -> "Maybe[OUTPUT]":
-        return Maybe.of(mapper(self.__value))
+    def map(self, mapper: Mapper[VALUE, Optional[OUTPUT]]) -> "Maybe[OUTPUT]":
+        return maybe(mapper(self.__value))
 
     def or_else(self, other: Union[VALUE, Supplier[VALUE]]) -> VALUE:
         return self.__value
@@ -212,7 +213,7 @@ class Empty(Maybe[VALUE]):
     def filter(self, predicate: Predicate[VALUE]) -> "Maybe[VALUE]":
         return self
 
-    def map(self, mapper: Mapper[VALUE, OUTPUT]) -> "Maybe[OUTPUT]":
+    def map(self, mapper: Mapper[VALUE, Optional[OUTPUT]]) -> "Maybe[OUTPUT]":
         return Empty[OUTPUT]()
 
     def or_else(self, other: Union[VALUE, Supplier[VALUE]]) -> VALUE:
