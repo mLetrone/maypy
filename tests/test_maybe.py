@@ -4,6 +4,7 @@ from typing import List
 import pytest
 
 from maypy import EMPTY, EmptyMaybeException, Maybe, maybe
+from maypy import EMPTY, EmptyMaybeException, Maybe, MaybeException, Some, maybe
 
 
 class MaybeTestException(Exception):
@@ -11,6 +12,10 @@ class MaybeTestException(Exception):
 
 
 class TestMaybe:
+    def test_init_some_with_none_should_raise_error(self) -> None:
+        with pytest.raises(MaybeException):
+            Some(None)
+
     def test_of_should_be_present_for_valuated_maybe(self) -> None:
         assert Maybe.of(2).is_present() is True
 
