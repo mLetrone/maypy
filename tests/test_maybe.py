@@ -1,14 +1,16 @@
 from functools import partial
-from typing import List
+from typing import Dict, List, Optional, TypeVar
 
 import pytest
 
-from maypy import EMPTY, EmptyMaybeException, Maybe, maybe
 from maypy import EMPTY, EmptyMaybeException, Maybe, MaybeException, Some, maybe
 
 
 class MaybeTestException(Exception):
     pass
+
+
+T = TypeVar("T")
 
 
 class TestMaybe:
@@ -85,6 +87,15 @@ class TestMaybe:
 
     def test_or_none_when_empty_should_be_none(self) -> None:
         assert Maybe.empty().or_none() is None
+
+    def test_map_should_infer_with_optional_result_mapper(self) -> None:
+        def optional_mapper(val: T) -> Optional[T]:
+            return val
+
+        dictionary: Dict[str, int] = {"a": 2}
+        res: Dict[str, int] = maybe(dictionary).map(optional_mapper).get()
+
+        assert res == dictionary
 
     def test__eq__(self) -> None:
         assert Maybe.empty() == Maybe.empty()
