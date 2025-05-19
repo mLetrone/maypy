@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 ## Maypy
 
+## 2.0.1 (2025-05-19)
+
+### :bug: Bug fixes
+
+- map typehint with optional return
+- forbid Some with None value
+
 ## 2.0.0 (2025-04-07)
 
 ### :sparkles: Features
