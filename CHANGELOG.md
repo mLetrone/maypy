@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 ## Maypy
 
+## 2.1.0 (2025-11-10)
+
+### :wrench: configurations
+
+- passing to UV
+- support 3.14
+
 ## 2.0.1 (2025-05-19)
 
 ### :bug: Bug fixes
