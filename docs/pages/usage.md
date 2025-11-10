@@ -172,7 +172,7 @@ assert maybe(price).filter(lambda x: x >= 1000).is_empty()
 
 You may wonder why using it and what is the gain. Let's dive on a more concrete example!
 
-You want to watch a movie, and you ony care about its release date. It should be in certain interval.
+You want to watch a movie, and you only care about its release date. It should be in certain interval.
 
 ```python
 from dataclasses import dataclass, field
@@ -263,6 +263,3 @@ maybe("name").if_present(lambda val: print(val))
 !!! warning
     To keep it functional, the function passed should not modify the value but only use it.
     Please use chaining of [`map`](#mapping) and get the value instead.
-
-
-
