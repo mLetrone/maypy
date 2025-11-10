@@ -194,7 +194,7 @@ class Some(Maybe[VALUE]):
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Maybe):
-            return other.get().__eq__(self.get()) if other.is_present() else False  # type: ignore[no-any-return]
+            return other.get().__eq__(self.get()) if other.is_present() else False
         return NotImplemented
 
     def __repr__(self) -> str:

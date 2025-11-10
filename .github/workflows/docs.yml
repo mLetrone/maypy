@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+env:
+  UV_PYTHON: "3.9"
+
 jobs:
   build:
     name: build documentation
@@ -13,19 +16,19 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: "set up env"
+        uses: astral-sh/setup-uv@v7
         with:
-          python-version: "3.9"
-          cache: pip
-      - name: update pip
-        run: pip install --upgrade pip
-      - name: install poetry
-        run: pip install poetry
-      - name: install docs dependencies
-        run: poetry install --only docs
-      - name: Configure Git Credentials
+          enable-cache: true
+          cache-dependency-glob: |
+            pyproject.toml
+      - name: "Install doc deps"
+        run: uv sync --only-group docs
+
+      - name: "Configure Git Credentials"
         run: |
           git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-      - name: build docs with mkdocs
-        run: cd docs && poetry run mkdocs gh-deploy --force
+          git config user.email github-actions[bot]@users.noreply.github.com
+
+      - name: "build docs with mkdocs"
+        run: cd docs && uv run mkdocs gh-deploy --force

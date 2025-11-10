@@ -9,21 +9,21 @@ from maypy import Predicate
 T = TypeVar("T")
 
 __all__ = [
-    "is_falsy",
-    "is_truthy",
-    "is_length",
-    "is_empty",
-    "is_blank_str",
-    "equals",
-    "contains",
-    "one_of",
-    "neg",
-    "match_regex",
     "between",
+    "contains",
+    "equals",
     "ge",
     "gt",
+    "is_blank_str",
+    "is_empty",
+    "is_falsy",
+    "is_length",
+    "is_truthy",
     "le",
     "lt",
+    "match_regex",
+    "neg",
+    "one_of",
 ]
 
 """

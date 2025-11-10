@@ -1,33 +1,47 @@
-name: release
+name: "Release"
 
 on:
   push:
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
 
-
 jobs:
-  pypi-publish:
-    name: Publish to Pypi
+  build:
+    name: "Build distribution package"
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
-      - name: update pip
-        run: pip install --upgrade pip
-      - name: install poetry
-        run: pip install poetry
-      - name: Extract Tag Name
-        run: echo "TAG_NAME=$(git describe --tags --exact-match HEAD)" >> $GITHUB_ENV
-      - name: display tag version
-        run: echo "new version $TAG_NAME"
-      - name: update version
-        run: poetry version $TAG_NAME
-      - name: publish
-        run: poetry publish --build
-        env:
-           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+          python-version: '3.9'
+
+      - name: "Install 'build' library"
+        run: pip install -U build
+
+      - name: build
+        run: python -m build
+
+      - name: "Upload distribution artifacts"
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish-pypi:
+    name: "Publish to PyPI"
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # IMPORTANT: mandatory for trusted publishing
+    environment:
+      name: pypi
+      url: https://pypi.org/p/maypy
+    steps:
+      - name: "Download distribution artifacts"
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: "Publish package distributions to PyPI"
+        uses: pypa/gh-action-pypi-publish@release/v1

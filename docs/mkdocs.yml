@@ -89,4 +89,3 @@ plugins:
             docstring_section_style: table
             group_by_category: true
             show_root_full_path: false
-

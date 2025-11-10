@@ -13,15 +13,15 @@ from ._functional import Mapper, Predicate, Supplier
 from ._maybe import EMPTY, Empty, Maybe, Some, maybe
 
 __all__ = [
-    "Maybe",
-    "maybe",
-    "Some",
-    "Empty",
-    "Mapper",
-    "Supplier",
-    "Predicate",
-    "EmptyMaybeException",
-    "MaybeException",
     "EMPTY",
+    "Empty",
+    "EmptyMaybeException",
+    "Mapper",
+    "Maybe",
+    "MaybeException",
+    "Predicate",
+    "Some",
+    "Supplier",
+    "maybe",
     "predicates",
 ]
